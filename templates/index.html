@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>stocks</title>
+    </head>
+    <body>
+        <table>
+    {% for stock in stocks %}
+    <tr>
+        <td>{{ stock.id}}</td>
+        <td>{{ stock.symbol}}</td>
+        <td>{{ stock.company}}</td>
+    </tr>
+    {% endfor%}
+        </table
+    </body>
+</html>
