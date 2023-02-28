@@ -24,6 +24,9 @@ cursor.execute("""
             low NOT NULL,
             close NOT NULL,
             volume NOT NULL,
+            sma_21,
+            sma_5,
+            rsi_13,
             FOREIGN KEY (stock_id) REFERENCES stock (id)
         )""")
 

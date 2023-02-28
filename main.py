@@ -14,7 +14,7 @@ def index(request: Request):
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     
-    if stock_filter == 'new_intraday_highs':
+    if stock_filter == 'new_closing_highs':
         cursor.execute("""
         SELECT * FROM (
             SELECT symbol, name, stock_id, max(close), date
@@ -23,6 +23,18 @@ def index(request: Request):
             ORDER by symbol
         ) WHERE date = ?
         """, (date.today().isoformat(),))
+    
+    elif stock_filter == 'new_closing_lows':
+                cursor.execute("""
+        SELECT * FROM (
+            SELECT symbol, name, stock_id, min(close), date
+            FROM stock_price join stock on stock.id = stock_price.stock_id
+            GROUP by stock_id
+            ORDER by symbol
+        ) WHERE date = ?
+        """, (date.today().isoformat(),))
+        
+    
     else:
         cursor.execute("""
             SELECT id, symbol, name FROM stock ORDER BY symbol
@@ -66,7 +78,7 @@ def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
     cursor = connection.cursor()
     
     cursor.execute("""
-        INSERT INTO stock_strategy (stock_id, strategy_id) VALUES (?, ?)
+        INSERT INTO stock_strategy (strategy_id ,stock_id) VALUES (?, ?)
                """, (stock_id, strategy_id))
     
     connection.commit()

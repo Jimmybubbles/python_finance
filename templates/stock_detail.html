@@ -41,7 +41,7 @@
                 <option value="{{strategy.id}}">{{strategy.name}}</option>
             {% endfor %}
         </select>
-        <input type="text" name="stock_id" value="{{stock.id}}"/>
+        <input type="hidden" name="stock_id" value="{{stock.id}}"/>
         <input type="submit" value="apply strategy"/>
     </form>
 

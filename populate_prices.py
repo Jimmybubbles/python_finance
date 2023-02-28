@@ -3,6 +3,7 @@ import alpaca_trade_api as tradeapi
 from alpaca_trade_api.rest import TimeFrame
 
 
+
 connection = sqlite3.connect(config.DB_FILE)
 connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
