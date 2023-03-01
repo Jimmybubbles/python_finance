@@ -21,28 +21,40 @@ def index(request: Request):
             FROM stock_price join stock on stock.id = stock_price.stock_id
             GROUP by stock_id
             ORDER by symbol
-        ) WHERE date = ?
-        """, (date.today().isoformat(),))
+        ) WHERE date = (select max(date) from stock_price)
+        """)
     
     elif stock_filter == 'new_closing_lows':
-                cursor.execute("""
+        cursor.execute("""
         SELECT * FROM (
             SELECT symbol, name, stock_id, min(close), date
-            FROM stock_price join stock on stock.id = stock_price.stock_id
+            FROM stock_price JOIN stock on stock.id = stock_price.stock_id
             GROUP by stock_id
             ORDER by symbol
-        ) WHERE date = ?
-        """, (date.today().isoformat(),))
+        ) WHERE date = (select max(date) from stock_price)
+        """)
         
     
     else:
         cursor.execute("""
-            SELECT id, symbol, name FROM stock ORDER BY symbol
+            SELECT id, symbol, name, exchange FROM stock ORDER BY symbol
                    """)
     
     rows = cursor.fetchall()
+  
+    cursor.execute("""
+            SELECT symbol, close
+            FROM stock JOIN stock_price on stock_price.stock_id = stock.id
+            WHERE date = (select max(date) from stock_price)  
+            """)
     
-    return templates.TemplateResponse("index.html", {"request":request, "stocks": rows})
+    indicator_rows = cursor.fetchall()
+    indicator_values = {}
+    
+    for row in indicator_rows:
+        indicator_values[row['symbol']] = row
+    
+    return templates.TemplateResponse("index.html", {"request":request, "stocks": rows, 'indicator_values': indicator_values })
 
 @app.get("/stock/{symbol}")
 def StockDetail(request: Request, symbol):
