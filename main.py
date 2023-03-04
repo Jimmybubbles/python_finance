@@ -44,6 +44,7 @@ def index(request: Request):
         
     rows = cursor.fetchall()
     
+    
     cursor.execute("""
             SELECT symbol, close
             FROM stock JOIN stock_price on stock_price.stock_id = stock.id
@@ -53,9 +54,10 @@ def index(request: Request):
     indicator_rows = cursor.fetchall()
     indicator_values = {}
     
+    
     for row in indicator_rows:
         indicator_values[row['symbol']] = row
-    # print(indicator_values)
+    print(indicator_rows)
         
     return templates.TemplateResponse("index.html", {"request":request, "stocks": rows, "indicator_values" : indicator_values})
 
