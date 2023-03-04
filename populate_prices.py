@@ -40,8 +40,8 @@ for i in range(0, len(symbols), chunk_size):
     
     symbol_chunk = symbols[i:i+chunk_size]
     
-    
-    barsets = api.get_bars(symbol_chunk,TimeFrame.Day,"2023-01-28", "2023-03-01", )._raw   
+    # barset variable with the raw data of price bars
+    barsets = api.get_bars(symbol_chunk,TimeFrame.Day,"2023-02-01", "2023-03-02", )._raw   
 
 
     # for symbol in barsets:

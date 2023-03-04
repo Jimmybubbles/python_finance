@@ -20,14 +20,17 @@
 
 
 
-        <table class="ui selectable striped table">
+        <table class="ui selectable inverted table">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Symbol</th>
                     <th>Name</th>
                     <th>Exchange</th>
-                    <th>Price</th>
-                    <th>Jimmy_Channels</th>
+                    <th>Close_Price</th>
+                    <th>indicator1</th>
+                    <th>indicator2</th>
+                    <th>indicator3</th>
                     
                 </tr>
             </thead>
@@ -35,9 +38,18 @@
                     {% for stock in stocks %}
                     <tr>
                         
+                        <td>{{ stock.id }}</td>
                         <td>{{ stock.symbol}}</td>
                         <td><a href="/stock/{{stock.symbol}}">{{ stock.name}}</a></td>
                         <td>{{ stock.exchange}}</td>
+                        
+                        
+                        
+                        <td>{{ indicator_values[stock.symbol].close }}</td>
+                        
+                           
+                        
+                        
                     </tr>
                     
                     {% endfor%}
