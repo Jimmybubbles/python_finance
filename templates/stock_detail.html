@@ -34,7 +34,7 @@
   </div>
   <!-- TradingView Widget END -->
   <h2> Strategies </h2>
-  <form action='/apply_strategy' method="post">
+  <form  method="post" action='/apply_strategy'>
         <select name="strategy_id" >
             {%for strategy in strategies %}
                 <option value="{{strategy.id}}">{{strategy.name}}</option>

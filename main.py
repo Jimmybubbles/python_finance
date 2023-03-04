@@ -37,24 +37,29 @@ def index(request: Request):
     
     else:
         cursor.execute("""
-            SELECT id, symbol, name, exchange FROM stock ORDER BY symbol
+            SELECT id, symbol ,name, exchange
+            FROM stock 
+            ORDER BY symbol
                    """)
-    
+        
     rows = cursor.fetchall()
-  
+    
+    
     cursor.execute("""
             SELECT symbol, close
             FROM stock JOIN stock_price on stock_price.stock_id = stock.id
-            WHERE date = (select max(date) from stock_price)  
-            """)
+            WHERE date = (select max(date) from stock_price)
+                   """)
     
     indicator_rows = cursor.fetchall()
     indicator_values = {}
     
+    
     for row in indicator_rows:
         indicator_values[row['symbol']] = row
-    
-    return templates.TemplateResponse("index.html", {"request":request, "stocks": rows, 'indicator_values': indicator_values })
+    print(indicator_rows)
+        
+    return templates.TemplateResponse("index.html", {"request":request, "stocks": rows, "indicator_values" : indicator_values})
 
 @app.get("/stock/{symbol}")
 def StockDetail(request: Request, symbol):
@@ -114,12 +119,14 @@ def strategy(request: Request, strategy_id):
     
     strategy = cursor.fetchone()
     
+    
     cursor.execute("""
         SELECT symbol, name
         FROM stock JOIN stock_strategy on stock_strategy.stock_id = stock.id
         WHERE strategy_id = ?
                """, (strategy_id,))
     
-    stocks = cursor.fetchall()
+    stock = cursor.fetchall()
+   
     
-    return templates.TemplateResponse("strategy.html", {"request": request, "stocks": stocks, "strategy": strategy })
+    return templates.TemplateResponse("strategy.html", {"request": request, "stock": stock, "strategy": strategy })

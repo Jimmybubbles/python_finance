@@ -19,10 +19,11 @@ symbols = [row['symbol'] for row in rows]
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY, base_url=config.API_URL)
 assets = api.list_assets()
 
+
 for asset in assets:
     # if the symbol is equal to ticker print asset
     # if asset.symbol == 'FTSI':
-        # print(asset)
+    #     print(asset)
     
     #this is to loop through the values in the object provided by alpaca and insert them into own db. - fucking mad
     # get dupicate id so use a try catch block when you have duplicates

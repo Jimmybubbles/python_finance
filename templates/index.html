@@ -10,24 +10,31 @@
             <h1>Stock list</h1>
 
         <form method="get">
+
             <select name="filter">
+
                 <option value="">All Stocks</option>
                 <option {% if request.query_params.filter == "new_closing_highs" %}selected="selected" {% endif %}value="new_closing_highs">New Closing Highs</option>
                 <option {% if request.query_params.filter == "new_closing_lows" %}selected="selected" {% endif %} value="new_closing_lows">New Closing Lows</option>
+                <option {% if request.query_params.filter == "RSI_overbought" %}selected="selected" {% endif %} value="new_closing_lows">RSI Over Bought</option>
+                <option {% if request.query_params.filter == "RSI_oversold" %}selected="selected" {% endif %} value="new_closing_lows">RSI Over Sold</option>
             </select>
             <button class="mini ui button" type="sumbit">Submit</button>
         </form>
 
 
 
-        <table class="ui selectable striped table">
+        <table class="ui selectable inverted table">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Symbol</th>
                     <th>Name</th>
                     <th>Exchange</th>
-                    <th>Price</th>
-                    <th>Jimmy_Channels</th>
+                    <th>Close_Price</th>
+                    <th>indicator1</th>
+                    <th>indicator2</th>
+                    <th>indicator3</th>
                     
                 </tr>
             </thead>
@@ -35,9 +42,17 @@
                     {% for stock in stocks %}
                     <tr>
                         
+                        <td>{{ stock.id }}</td>
                         <td>{{ stock.symbol}}</td>
                         <td><a href="/stock/{{stock.symbol}}">{{ stock.name}}</a></td>
                         <td>{{ stock.exchange}}</td>
+                        
+                       
+                        <td>{{indicator_values.symbol }}</td>
+                       
+                           
+                        
+                        
                     </tr>
                     
                     {% endfor%}
