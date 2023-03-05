@@ -1,6 +1,8 @@
 import sqlite3, config
 import alpaca_trade_api as tradeapi
 from alpaca_trade_api.rest import TimeFrame
+from ta import trend 
+import pandas as pd
 
 
 
@@ -23,15 +25,22 @@ for row in rows:
     stock_dict[symbol] = row['id']
     
 api = tradeapi.REST(config.API_KEY, config.SECRET_KEY, base_url=config.API_URL)
-# barset = api.get_bars("MNST", TimeFrame.Day, "2022-08-01", "2023-02-20", adjustment='raw').df
-
 
 chunk_size = 200
 
 for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i+chunk_size]
 
-    barsets = api.get_bars(symbol_chunk,TimeFrame.Day,"2022-02-01", "2023-02-03")._raw
+    barsets = api.get_bars(symbol,TimeFrame.Day,"2022-02-01", "2023-02-03")._raw
+
+    
+    
+    # recent_closes = [bar['c'] for bar in barsets]   
+    # # if len(recent_closes) >= 50:
+    
+    # print(recent_closes)
+    
+
 
     for bar in barsets:
         symbol = bar["S"]

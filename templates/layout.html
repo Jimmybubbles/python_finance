@@ -5,10 +5,34 @@
         <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
     </head>
     <body>
-        <div class="ui container">
-            {% block content %}
-            {% endblock %}
-        </div>
 
+        <div class="ui secondary pointing menu">
+            <a class='active item'>
+                Home
+            </a>
+            <a class='item'>
+                profit/loss
+            </a>
+            <a class='item'>
+                watchlist
+            </a>
+            <a class='item'>
+               predictions 
+            </a>
+            <a class='item'>
+                Jimmys strategy 
+             </a>
+            <div class="right menu">
+                <a class="ui item">
+                    Logout
+                </a>
+            </div>
+        </div> 
+
+            <div class="ui container">
+                {% block content %}
+                {% endblock %}
+            </div>
+         
     </body>
-    </html>
+</html>

@@ -17,7 +17,7 @@ def index(request: Request):
     if stock_filter == 'new_closing_highs':
         cursor.execute("""
         SELECT * FROM (
-            SELECT symbol, name, stock_id, max(close), date
+            SELECT symbol, name, exchange, stock_id, max(close), date
             FROM stock_price join stock on stock.id = stock_price.stock_id
             GROUP by stock_id
             ORDER by symbol
@@ -27,7 +27,7 @@ def index(request: Request):
     elif stock_filter == 'new_closing_lows':
         cursor.execute("""
         SELECT * FROM (
-            SELECT symbol, name, stock_id, min(close), date
+            SELECT symbol, name, exchange, stock_id, min(close), date
             FROM stock_price JOIN stock on stock.id = stock_price.stock_id
             GROUP by stock_id
             ORDER by symbol
@@ -48,6 +48,7 @@ def index(request: Request):
     cursor.execute("""
             SELECT symbol, close
             FROM stock JOIN stock_price on stock_price.stock_id = stock.id
+            WHERE date = (select max(date) from stock_price)
                    """)
     
     indicator_rows = cursor.fetchall()
@@ -123,7 +124,7 @@ def strategy(request: Request, strategy_id):
         SELECT symbol, name
         FROM stock JOIN stock_strategy ON stock_strategy.stock_id = stock.id
         WHERE strategy_id = ?
-    """, (strategy_id,))
+             """, (strategy_id,))
     
     stocks = cursor.fetchall()
     print(len(stocks))
@@ -131,20 +132,5 @@ def strategy(request: Request, strategy_id):
     return templates.TemplateResponse("strategy.html", {"request": request, "stocks": stocks, "strategy": strategy })
 
 
-@app.get("/strategy/{strategy_id}")
-def price(request: Request, strategy_id):
-    connection = sqlite3.connect(config.DB_FILE)
-    connection.row_factory = sqlite3.Row
-    cursor = connection.cursor()
-    
-    cursor.execute("""
-        SELECT Id, name
-        FROM strategy
-        WHERE id = ?
-               """, (strategy_id,))
-    
-    stock = cursor.fetchone()
-    
-    return templates.TemplateResponse("recent_closes.html", {"request": request, "stock": stock })
 
 

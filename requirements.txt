@@ -1,0 +1,4 @@
+fastapi
+alpaca_trade_api
+ta
+pandas

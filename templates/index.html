@@ -1,23 +1,21 @@
-<html>
-    <head>
-        <title>stocks</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
-    </head>
-    <body>
+{% extends 'layout.html' %}
+
+{% block content %}
         
-        <div class="ui container">
-            <h1>Stock list</h1>
+    <h1>Tradeable stocks index</h1>
+
+
 
         <form method="get">
 
             <select name="filter">
 
                 <option value="">All Stocks</option>
+                <option {% if request.query_params.filter == "opening_range_breakout" %}selected="selected" {% endif %}value="opening_range_breakout">opeing range breakout</option>
                 <option {% if request.query_params.filter == "new_closing_highs" %}selected="selected" {% endif %}value="new_closing_highs">New Closing Highs</option>
                 <option {% if request.query_params.filter == "new_closing_lows" %}selected="selected" {% endif %} value="new_closing_lows">New Closing Lows</option>
-                <option {% if request.query_params.filter == "RSI_overbought" %}selected="selected" {% endif %} value="new_closing_lows">RSI Over Bought</option>
-                <option {% if request.query_params.filter == "RSI_oversold" %}selected="selected" {% endif %} value="new_closing_lows">RSI Over Sold</option>
+                <option {% if request.query_params.filter == "RSI_overbought" %}selected="selected" {% endif %} value="RSI_overbought">RSI Over Bought</option>
+                <option {% if request.query_params.filter == "RSI_oversold" %}selected="selected" {% endif %} value="RSI_oversold">RSI Over Sold</option>
             </select>
             <button class="mini ui button" type="sumbit">Submit</button>
         </form>
@@ -57,6 +55,4 @@
                     {% endfor%}
                 </tbody>
             </table>
-        </div>
-        </body>
-</html>
+{%endblock%}

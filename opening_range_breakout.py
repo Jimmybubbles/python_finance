@@ -20,7 +20,7 @@ cursor.execute("""
     FROM stock
     JOIN stock_strategy on stock_strategy.stock_id = stock.id
     WHERE stock_strategy.strategy_id = ?
-               """, (strategy_id)) 
+               """, (strategy_id,)) 
 
 stocks = cursor.fetchall()
 symbols = [stock['symbol'] for stock in stocks]
