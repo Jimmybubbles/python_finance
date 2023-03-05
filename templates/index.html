@@ -32,9 +32,8 @@
                     <th>Name</th>
                     <th>Exchange</th>
                     <th>Close_Price</th>
-                    <th>indicator1</th>
-                    <th>indicator2</th>
-                    <th>indicator3</th>
+ 
+
                     
                 </tr>
             </thead>
@@ -47,10 +46,10 @@
                         <td><a href="/stock/{{stock.symbol}}">{{ stock.name}}</a></td>
                         <td>{{ stock.exchange}}</td>
                         
-                       
-                        <td>{{indicator_values.symbol }}</td>
-                       
-                           
+                        {%if indicator_values[stock.symbol]%}
+                        <td>{{indicator_values[stock.symbol].close}}<td>
+                        {%endif%}
+
                         
                         
                     </tr>

@@ -44,11 +44,10 @@ def index(request: Request):
         
     rows = cursor.fetchall()
     
-    
+   
     cursor.execute("""
             SELECT symbol, close
             FROM stock JOIN stock_price on stock_price.stock_id = stock.id
-            WHERE date = (select max(date) from stock_price)
                    """)
     
     indicator_rows = cursor.fetchall()
@@ -57,7 +56,7 @@ def index(request: Request):
     
     for row in indicator_rows:
         indicator_values[row['symbol']] = row
-    print(indicator_rows)
+    # print(indicator_rows)
         
     return templates.TemplateResponse("index.html", {"request":request, "stocks": rows, "indicator_values" : indicator_values})
 
@@ -112,21 +111,40 @@ def strategy(request: Request, strategy_id):
     
     
     cursor.execute("""
+        SELECT id, name
+        FROM strategy
+        WHERE id = ?  
+               """, (strategy_id,))
+    
+    strategy = cursor.fetchone()
+    print(len(strategy.keys()))
+    
+    cursor.execute("""
+        SELECT symbol, name
+        FROM stock JOIN stock_strategy ON stock_strategy.stock_id = stock.id
+        WHERE strategy_id = ?
+    """, (strategy_id,))
+    
+    stocks = cursor.fetchall()
+    print(len(stocks))
+    
+    return templates.TemplateResponse("strategy.html", {"request": request, "stocks": stocks, "strategy": strategy })
+
+
+@app.get("/strategy/{strategy_id}")
+def price(request: Request, strategy_id):
+    connection = sqlite3.connect(config.DB_FILE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    
+    cursor.execute("""
         SELECT Id, name
         FROM strategy
         WHERE id = ?
                """, (strategy_id,))
     
-    strategy = cursor.fetchone()
+    stock = cursor.fetchone()
     
-    
-    cursor.execute("""
-        SELECT symbol, name
-        FROM stock JOIN stock_strategy on stock_strategy.stock_id = stock.id
-        WHERE strategy_id = ?
-               """, (strategy_id,))
-    
-    stock = cursor.fetchall()
-   
-    
-    return templates.TemplateResponse("strategy.html", {"request": request, "stock": stock, "strategy": strategy })
+    return templates.TemplateResponse("recent_closes.html", {"request": request, "stock": stock })
+
+
