@@ -57,9 +57,41 @@ def index(request: Request):
     
     for row in indicator_rows:
         indicator_values[row['symbol']] = row
-    # print(indicator_rows)
+    
         
     return templates.TemplateResponse("index.html", {"request":request, "stocks": rows, "indicator_values" : indicator_values})
+
+
+@app.get("/strategies")
+def strategies(request: Request):
+    connection = sqlite3.connect(config.DB_FILE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    
+    cursor.execute("""
+        SELECT * FROM strategy
+                   """)
+    
+    Strategies = cursor.fetchall()
+
+    return templates.TemplateResponse("strategies.html", {"request":request , "Strategies": Strategies} )
+
+@app.get("/watchlist")
+def watchlist(request: Request):
+    
+    return templates.TemplateResponse("watchlist.html", {"request": request} , status_code=303)
+
+
+@app.get("/etf")
+def watchlist(request: Request):
+    
+    return templates.TemplateResponse("etf.html", {"request": request} , status_code=303)
+
+@app.get("/profit_loss")
+def watchlist(request: Request):
+    
+    return templates.TemplateResponse("profit_loss.html", {"request": request} , status_code=303)
+
 
 @app.get("/stock/{symbol}")
 def StockDetail(request: Request, symbol):
@@ -81,21 +113,21 @@ def StockDetail(request: Request, symbol):
     row = cursor.fetchone()
     
     cursor.execute("""
-        SELECT * FROM stock_price WHERE stock_id = ? ORDER by date DESC
+        SELECT * FROM stock_price WHERE stock_id = ? 
                """, (row['id'],))
     
     prices = cursor.fetchall()
     
-    return templates.TemplateResponse("stock_detail.html", {"request":request, "stock": row, "bars": prices, "strategies": strategies})
+    return templates.TemplateResponse("stock_detail.html", {"request":request, "strategies": strategies, "stock": row, "bars": prices, })
     
-    
+# form handler to insert stock id into the strategy table
 @app.post("/apply_strategy")
 def apply_strategy(strategy_id: int = Form(...), stock_id: int = Form(...)):
     connection = sqlite3.connect(config.DB_FILE)
     cursor = connection.cursor()
     
     cursor.execute("""
-        INSERT INTO stock_strategy (strategy_id ,stock_id) VALUES (?, ?)
+        INSERT INTO stock_strategy (stock_id, strategy_id) VALUES (?, ?)
                """, (stock_id, strategy_id))
     
     connection.commit()
@@ -118,18 +150,19 @@ def strategy(request: Request, strategy_id):
                """, (strategy_id,))
     
     strategy = cursor.fetchone()
-    print(len(strategy.keys()))
+
     
     cursor.execute("""
-        SELECT symbol, name
-        FROM stock JOIN stock_strategy ON stock_strategy.stock_id = stock.id
+        SELECT id, symbol, name
+        FROM stock JOIN stock_strategy on stock_strategy.stock_id = stock.id
+
         WHERE strategy_id = ?
              """, (strategy_id,))
     
     stocks = cursor.fetchall()
-    print(len(stocks))
+
     
-    return templates.TemplateResponse("strategy.html", {"request": request, "stocks": stocks, "strategy": strategy })
+    return templates.TemplateResponse("strategy.html", {"request": request, "strategy": strategy, "stocks": stocks}  )
 
 
 

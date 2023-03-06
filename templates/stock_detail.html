@@ -95,6 +95,8 @@
     );
     </script>
   </div>
+
+   
   <!-- TradingView Widget END -->
   <h2> Strategies </h2>
   <form  method="post" action='/apply_strategy'>
@@ -104,7 +106,7 @@
             {% endfor %}
         </select>
         <input type="hidden" name="stock_id" value="{{stock.id}}"/>
-        <input type="submit" value="apply strategy"/>
+        <input type="submit" value="Add strategy"/>
     </form>
 
     <h2>Prices</h2>
